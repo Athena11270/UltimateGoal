@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -44,15 +45,21 @@ public class SevenTheRobot {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
+    // create arrays for motors
+    public DcMotor[] LeftMotors = new DcMotor[2];
+    public DcMotor[] RightMotors = new DcMotor[2];
+    public DcMotor[] AllMotors = new DcMotor[4];
+
     // Motors
     public DcMotor FL = null;
     public DcMotor FR = null;
     public DcMotor BL = null;
     public DcMotor BR = null;
 
+
+
     // you will need a reference to your OpMode
     private LinearOpMode OpModeReference;
-
     public SevenTheRobot(LinearOpMode opMode) {
         OpModeReference = opMode;
     }
@@ -62,5 +69,56 @@ public class SevenTheRobot {
         FR = OpModeReference.hardwareMap.get(DcMotor.class, "right_front");
         BL = OpModeReference.hardwareMap.get(DcMotor.class, "left_back");
         BR = OpModeReference.hardwareMap.get(DcMotor.class, "right_back");
+
+        // motor arrays
+        // left
+        LeftMotors[0] = FL;
+        LeftMotors[1] = BL;
+        // right
+        RightMotors[0] = FR;
+        RightMotors[1] = BR;
+        // all
+        AllMotors[0] = FL;
+        AllMotors[1] = FR;
+        AllMotors[2] = BL;
+        AllMotors[3] = BR;
+
+        for (DcMotor l : LeftMotors)
+            l.setDirection(DcMotorSimple.Direction.REVERSE);
+        for (DcMotor r : RightMotors)
+            r.setDirection(DcMotorSimple.Direction.FORWARD);
+        for (DcMotor m : AllMotors)
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+
+    public void mecanum () {
+
+
+        double speed = OpModeReference.gamepad1.left_stick_y / Math.sqrt(2);
+        double strafe = OpModeReference.gamepad1.left_stick_x;
+        double rotate = OpModeReference.gamepad1.right_stick_x;
+        double movingSpeed;
+
+        if (OpModeReference.gamepad1.left_bumper) {
+            movingSpeed = 0.4;
+        }
+        else {
+            movingSpeed = 0.8;
+        }
+
+        double leftFrontDir = Range.clip((speed - strafe - rotate), -1, 1) * movingSpeed;
+        double rightFrontDir = Range.clip((speed + strafe + rotate), -1, 1) * movingSpeed;
+        double leftBackDir = Range.clip((speed + strafe - rotate), -1, 1) * movingSpeed;
+        double rightBackDir = Range.clip((speed - strafe + rotate), -1, 1) * movingSpeed;
+
+        FL.setPower(leftFrontDir);
+        FR.setPower(rightFrontDir);
+        BL.setPower(leftBackDir);
+        BR.setPower(rightBackDir);
+
+//        OpModeReference.telemetry.addData("Central Velocity", speed*movingSpeed);
+//        OpModeReference.telemetry.addData("Lateral Velocity", strafe*movingSpeed);
+//        OpModeReference.telemetry.addData("Rotation", rotate*movingSpeed);
+    }
+
 }
