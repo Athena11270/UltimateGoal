@@ -56,6 +56,10 @@ public class SevenTheRobot {
     public DcMotor BL = null;
     public DcMotor BR = null;
 
+    // Outtake/Launchers
+    private DcMotor LR = null;
+    private DcMotor LL = null;
+
 
 
     // you will need a reference to your OpMode
@@ -65,10 +69,15 @@ public class SevenTheRobot {
     }
 
     public void initialize() {
-        FL = OpModeReference.hardwareMap.get(DcMotor.class, "left_front");
-        FR = OpModeReference.hardwareMap.get(DcMotor.class, "right_front");
-        BL = OpModeReference.hardwareMap.get(DcMotor.class, "left_back");
-        BR = OpModeReference.hardwareMap.get(DcMotor.class, "right_back");
+        // wheels
+        FL = OpModeReference.hardwareMap.get(DcMotor.class, "FL");
+        FR = OpModeReference.hardwareMap.get(DcMotor.class, "FR");
+        BL = OpModeReference.hardwareMap.get(DcMotor.class, "BL");
+        BR = OpModeReference.hardwareMap.get(DcMotor.class, "BR");
+
+        // outtake
+        LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
+        LL = OpModeReference.hardwareMap.get(DcMotor.class, "LL");
 
         // motor arrays
         // left
@@ -83,6 +92,9 @@ public class SevenTheRobot {
         AllMotors[2] = BL;
         AllMotors[3] = BR;
 
+        LR.setDirection(DcMotor.Direction.FORWARD);
+        LL.setDirection(DcMotor.Direction.REVERSE);
+
         for (DcMotor l : LeftMotors)
             l.setDirection(DcMotorSimple.Direction.REVERSE);
         for (DcMotor r : RightMotors)
@@ -91,8 +103,14 @@ public class SevenTheRobot {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void mecanum () {
+    public void launcher (double amount) {
 
+        LL.setPower(amount);
+        LR.setPower(amount);
+
+    }
+
+    public void mecanum () {
 
         double speed = OpModeReference.gamepad1.left_stick_y / Math.sqrt(2);
         double strafe = OpModeReference.gamepad1.left_stick_x;
