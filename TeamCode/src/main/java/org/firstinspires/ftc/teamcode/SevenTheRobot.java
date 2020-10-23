@@ -59,6 +59,8 @@ public class SevenTheRobot {
     // Outtake/Launchers
     private DcMotor LR = null;
     private DcMotor LL = null;
+    //in case of 1 motor for launcher
+    private DcMotor OT = null;
 
 
 
@@ -78,7 +80,7 @@ public class SevenTheRobot {
         // outtake
         LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
         LL = OpModeReference.hardwareMap.get(DcMotor.class, "LL");
-
+        OT = OpModeReference.hardwareMap.get(DcMotor.class, "OT");
         // motor arrays
         // left
         LeftMotors[0] = FL;
@@ -108,6 +110,10 @@ public class SevenTheRobot {
         LL.setPower(amount);
         LR.setPower(amount);
 
+    }
+
+    public void launcherMono (double amount) {
+        OT.setPower(amount);
     }
 
     public void mecanum () {
