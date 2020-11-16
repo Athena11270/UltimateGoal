@@ -57,8 +57,8 @@ public class SevenTheRobot {
     public DcMotor BR = null;
 
     // Outtake/Launchers
-    private DcMotor LR = null;
-    private DcMotor LL = null;
+    /*private DcMotor LR = null;
+    private DcMotor LL = null;*/
     //in case of 1 motor for launcher
     private DcMotor OT = null;
 
@@ -78,8 +78,8 @@ public class SevenTheRobot {
         BR = OpModeReference.hardwareMap.get(DcMotor.class, "BR");
 
         // outtake
-        LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
-        LL = OpModeReference.hardwareMap.get(DcMotor.class, "LL");
+        /*LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
+        LL = OpModeReference.hardwareMap.get(DcMotor.class, "LL");*/
         OT = OpModeReference.hardwareMap.get(DcMotor.class, "OT");
         // motor arrays
         // left
@@ -94,8 +94,9 @@ public class SevenTheRobot {
         AllMotors[2] = BL;
         AllMotors[3] = BR;
 
-        LR.setDirection(DcMotor.Direction.FORWARD);
-        LL.setDirection(DcMotor.Direction.REVERSE);
+        /*LR.setDirection(DcMotor.Direction.FORWARD);
+        LL.setDirection(DcMotor.Direction.REVERSE);*/
+        OT.setDirection(DcMotor.Direction.FORWARD);
 
         for (DcMotor l : LeftMotors)
             l.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -105,12 +106,12 @@ public class SevenTheRobot {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void launcher (double amount) {
+    /*public void launcher (double amount) {
 
         LL.setPower(amount);
         LR.setPower(amount);
 
-    }
+    }*/
 
     public void launcherMono (double amount) {
         OT.setPower(amount);
