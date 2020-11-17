@@ -62,6 +62,9 @@ public class SevenTheRobot {
     //in case of 1 motor for launcher
     private DcMotor OT = null;
 
+    // Intake
+    private DcMotor IT = null;
+
 
 
     // you will need a reference to your OpMode
@@ -97,6 +100,7 @@ public class SevenTheRobot {
         /*LR.setDirection(DcMotor.Direction.FORWARD);
         LL.setDirection(DcMotor.Direction.REVERSE);*/
         OT.setDirection(DcMotor.Direction.FORWARD);
+        IT.setDirection(DcMotor.Direction.FORWARD);
 
         for (DcMotor l : LeftMotors)
             l.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -113,8 +117,12 @@ public class SevenTheRobot {
 
     }*/
 
-    public void launcherMono (double amount) {
-        OT.setPower(amount);
+    public void launcherMono (double outtakePower) {
+        OT.setPower(outtakePower);
+    }
+
+    public void intakeMono  (double intakePower) {
+        IT.setPower(intakePower);
     }
 
     public void mecanum () {

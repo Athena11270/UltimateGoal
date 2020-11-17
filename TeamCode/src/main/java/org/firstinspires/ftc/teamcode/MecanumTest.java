@@ -46,9 +46,11 @@ public class MecanumTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            double amount = gamepad1.right_trigger - gamepad1.left_trigger;
+            double outtakePower = gamepad1.right_trigger;
+            double intakePower = gamepad1.left_trigger;
             seven.mecanum();
-            seven.launcherMono(amount);
+            seven.launcherMono(outtakePower);
+            seven.intakeMono(intakePower);
             telemetry.update();
         }
 
