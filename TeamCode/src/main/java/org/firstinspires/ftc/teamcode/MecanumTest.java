@@ -41,7 +41,7 @@ public class MecanumTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        SevenTheRobot seven = new SevenTheRobot(this);
+        SevenTheRobotVision seven = new SevenTheRobotVision(this);
         seven.initialize();
         waitForStart();
 
