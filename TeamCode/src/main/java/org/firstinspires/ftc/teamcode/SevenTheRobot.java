@@ -85,6 +85,7 @@ public class SevenTheRobot {
         /*LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
         LL = OpModeReference.hardwareMap.get(DcMotor.class, "LL");*/
         OT = OpModeReference.hardwareMap.get(DcMotor.class, "OT");
+        IT = OpModeReference.hardwareMap.get(DcMotor.class, "IT");
         // motor arrays
         // left
         LeftMotors[0] = FL;

@@ -31,6 +31,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -103,6 +105,7 @@ public class SevenTheRobotVision {
         /*LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
         LL = OpModeReference.hardwareMap.get(DcMotor.class, "LL");*/
         OT = OpModeReference.hardwareMap.get(DcMotor.class, "OT");
+        IT = OpModeReference.hardwareMap.get(DcMotor.class, "IT");
         // motor arrays
         // left
         LeftMotors[0] = FL;
@@ -122,9 +125,9 @@ public class SevenTheRobotVision {
         IT.setDirection(DcMotor.Direction.FORWARD);
 
         for (DcMotor l : LeftMotors)
-            l.setDirection(DcMotorSimple.Direction.REVERSE);
+            l.setDirection(DcMotor.Direction.REVERSE);
         for (DcMotor r : RightMotors)
-            r.setDirection(DcMotorSimple.Direction.FORWARD);
+            r.setDirection(DcMotor.Direction.FORWARD);
         for (DcMotor m : AllMotors)
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
