@@ -39,7 +39,7 @@ public class PsuedoAuto extends LinearOpMode{
             //so we should just do the easiest goal and pray for the best I guess
         }
 
-        //either we do the high goal and run the same thing twice (12/24/36 points)
+        //either we do the high goal and run the same thing thrice (12/24/36 points)
         //or we shoot & adjust thrice to hit the power shots (15/30/45 points)
         //move to park on line (5 points)
         //fully optimized, that gives us 65 points (assuming power shots).
