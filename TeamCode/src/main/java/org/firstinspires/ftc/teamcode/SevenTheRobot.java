@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -66,7 +67,16 @@ public class SevenTheRobot {
     // Intake
     private DcMotor IT = null;
 
+    // servo for reservoir
+    public Servo BP = null;
 
+    // just gonna define some variables for encoders real quick dont mind me
+    static final double mmPerInch               = 25.4f;    // this is jus math tho
+    static final double countsPerRevolution     = 383.6f;   // Gobilda Yellowjacket 435
+    static final double wheelDiameterMM         = 100;      // For figuring circumference
+    static final double WheelDiameterIn         = wheelDiameterMM * mmPerInch;
+    static final double wheelCircumferenceIn    = WheelDiameterIn * Math.PI;
+    static final double countsPerInch         = (countsPerRevolution / wheelCircumferenceIn);
 
     // you will need a reference to your OpMode
     private LinearOpMode OpModeReference;
@@ -80,6 +90,8 @@ public class SevenTheRobot {
         FR = OpModeReference.hardwareMap.get(DcMotor.class, "FR");
         BL = OpModeReference.hardwareMap.get(DcMotor.class, "BL");
         BR = OpModeReference.hardwareMap.get(DcMotor.class, "BR");
+
+        BP = OpModeReference.hardwareMap.get(Servo.class, "BP");
 
         // outtake
         /*LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
@@ -120,18 +132,26 @@ public class SevenTheRobot {
     }*/
 
     public void launcherMono (double outtakePower) {
-        OT.setPower(outtakePower);
+        OT.setPower(-outtakePower);
     }
 
     public void intakeMono  (double intakePower) {
         IT.setPower(intakePower);
     }
 
+    public void bumper (boolean trig) {
+
+        if (trig)
+            BP.setPosition(0);
+        else
+            BP.setPosition(0.55);
+    }
+
     public void mecanum () {
 
-        double speed = OpModeReference.gamepad1.left_stick_y / Math.sqrt(2);
-        double strafe = OpModeReference.gamepad1.left_stick_x;
-        double rotate = OpModeReference.gamepad1.right_stick_x;
+        double speed = -OpModeReference.gamepad1.left_stick_y / Math.sqrt(2);
+        double strafe = -OpModeReference.gamepad1.left_stick_x;
+        double rotate = -OpModeReference.gamepad1.right_stick_x;
         double movingSpeed;
 
         if (OpModeReference.gamepad1.left_bumper) {
