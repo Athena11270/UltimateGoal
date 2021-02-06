@@ -163,7 +163,7 @@ public class SevenTheRobot {
 
     private void strafe (double inches, double speed){
         if (OpModeReference.opModeIsActive()) {
-            int targetTicks = (int) (countsPerInch * (-12 / 11));
+            int targetTicks = (int) (countsPerInch * inches * (-12 / 11));
             for (DcMotor m : AllMotors) {
                 m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -194,6 +194,69 @@ public class SevenTheRobot {
     }
     public void strafeR (double inches, double speed) {
         strafe(inches, speed);
+    }
+
+    private void diagonalLBR (double inches, double speed){
+        if (OpModeReference.opModeIsActive()) {
+            int targetTicks = (int) (countsPerInch * inches * (-12 / 11));
+            for (DcMotor m : AllMotors) {
+                m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            }
+
+            FL.setTargetPosition(targetTicks);
+            //FR.setTargetPosition(-targetTicks);
+            //BL.setTargetPosition(-targetTicks);
+            BR.setTargetPosition(targetTicks);
+
+            for (DcMotor m : AllMotors)
+                m.setPower(speed / Math.sqrt(2));
+
+            while (OpModeReference.opModeIsActive() && (FL.isBusy() && FR.isBusy() && BL.isBusy()
+                    && BR.isBusy())) {
+                OpModeReference.telemetry.addData("target ticks", targetTicks);
+                OpModeReference.telemetry.update();
+            }
+            stopDriving();
+            for (DcMotor m : AllMotors) {
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
+        }
+
+
+    }
+    private void diagonalFRBL (double inches, double speed) {
+        if (OpModeReference.opModeIsActive()) {
+            int targetTicks = (int) (countsPerInch * inches * (-12 / 11));
+            for (DcMotor m : AllMotors) {
+                m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            }
+
+            //FL.setTargetPosition(targetTicks);
+            FR.setTargetPosition(-targetTicks);
+            BL.setTargetPosition(-targetTicks);
+            //BR.setTargetPosition(targetTicks);
+
+            for (DcMotor m : AllMotors)
+                m.setPower(speed / Math.sqrt(2));
+
+            while (OpModeReference.opModeIsActive() && (FL.isBusy() && FR.isBusy() && BL.isBusy()
+                    && BR.isBusy())) {
+                OpModeReference.telemetry.addData("target ticks", targetTicks);
+                OpModeReference.telemetry.update();
+            }
+            stopDriving();
+            for (DcMotor m : AllMotors) {
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
+        }
     }
 
 

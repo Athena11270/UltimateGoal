@@ -15,29 +15,30 @@ import static org.firstinspires.ftc.teamcode.SevenTheRobotVision.RINGS_ONE;
 public class PsuedoAuto extends LinearOpMode{
     @Override
     public void runOpMode() {
-        SevenTheRobotVision seven = new SevenTheRobotVision(this);
+        SevenTheRobot seven = new SevenTheRobot(this);
         seven.initialize();
-        seven.InitCamera();
+        //seven.InitCamera();
         waitForStart();
 
         //move to be able to see the stack size
-        //read the stack
-        String stackSize = seven.DetectStackSize();
-        seven.CloseCamera();
 
-        if (stackSize.equals(RINGS_FOUR)){
+        //read the stack
+        /*String stackSize = seven.DetectStackSize();
+        seven.CloseCamera();*/
+
+        //if (stackSize.equals(RINGS_FOUR)){
             //move to zone C, drop wobble (15 points), move to shooting position
-        }
-        else if (stackSize.equals(RINGS_ONE)){
+        //}
+        //else if (stackSize.equals(RINGS_ONE)){
             //move to zone B, drop wobble (15 points), move to shooting position
-        }
-        else if (stackSize.equals(RINGS_NONE)){
+        //}
+        //else if (stackSize.equals(RINGS_NONE)){
             //move to zone C, drop wobble (15 points), move to shooting position
-        }
-        else {
+        //}
+        //else {
             //uh idk I mean there's an error if we got here,
             //so we should just do the easiest goal and pray for the best I guess
-        }
+        //}
 
         //either we do the high goal and run the same thing thrice (12/24/36 points)
         //or we shoot & adjust thrice to hit the power shots (15/30/45 points)
