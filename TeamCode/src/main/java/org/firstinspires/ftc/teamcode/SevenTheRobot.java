@@ -40,6 +40,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import java.nio.file.DirectoryIteratorException;
+
 // This is not an OpMode.  It is a class that holds all the boring stuff
 
 public class SevenTheRobot {
@@ -58,12 +60,16 @@ public class SevenTheRobot {
     public DcMotor BL = null;
     public DcMotor BR = null;
 
+    // arm and stuff
+    public DcMotor Arm = null;
+    public Servo Claw = null;
+
     // Outtake/Launchers
     /*private DcMotor LR = null;
     private DcMotor LL = null;*/
     //in case of 1 motor for launcher
     private DcMotor OT = null;
-//
+
     // Intake
     private DcMotor IT = null;
 
@@ -92,6 +98,11 @@ public class SevenTheRobot {
         BR = OpModeReference.hardwareMap.get(DcMotor.class, "BR");
 
         BP = OpModeReference.hardwareMap.get(Servo.class, "BP");
+
+        // arm and stuff electric boogaloo
+
+        Arm = OpModeReference.hardwareMap.get(DcMotor.class, "Arm");
+        Claw = OpModeReference.hardwareMap.get(Servo.class, "Claw");
 
         // outtake
         /*LR = OpModeReference.hardwareMap.get(DcMotor.class, "LR");
@@ -124,6 +135,11 @@ public class SevenTheRobot {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+        Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Arm.setDirection(DcMotorSimple.Direction.FORWARD);
+        Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     //Autonomous Methods:
@@ -132,6 +148,33 @@ public class SevenTheRobot {
         for (DcMotor m : AllMotors)
             m.setPower(0);
     }
+
+    public void openClaw () {
+        Claw.setPosition(1);
+    }
+
+    public void closeClaw () {
+        Claw.setPosition(0);
+    }
+
+    public void setArm (int pos) {
+        Arm.setTargetPosition(pos);
+        if (pos > Arm.getCurrentPosition()) {
+            Arm.setPower(-0.5);
+        }
+        else {
+            Arm.setPower(0.5);
+        }
+    }
+
+    public void armUp () {
+        setArm(620);
+    }
+
+    public void armDown () {
+        setArm(1155);
+    }
+
 
     public void drive (double inches, double speed){
         if (OpModeReference.opModeIsActive()) {
