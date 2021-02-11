@@ -80,7 +80,7 @@ public class SevenTheRobot {
     static final double mmPerInch               = 25.4f;    // this is jus math tho
     static final double countsPerRevolution     = 383.6f;   // Gobilda Yellowjacket 435
     static final double wheelDiameterMM         = 100;      // For figuring circumference
-    static final double WheelDiameterIn         = wheelDiameterMM * mmPerInch;
+    static final double WheelDiameterIn         = wheelDiameterMM / mmPerInch;
     static final double wheelCircumferenceIn    = WheelDiameterIn * Math.PI;
     static final double countsPerInch         = (countsPerRevolution / wheelCircumferenceIn);
 
@@ -176,37 +176,51 @@ public class SevenTheRobot {
     }
 
 
-    public void drive (double inches, double speed){
+    public void drive(double inches, double speed) {
+
+        // Ensure that the opmode is still active
         if (OpModeReference.opModeIsActive()) {
-            //calculate how many ticks we need to go
-            int targetTicks = (int) (-inches * countsPerInch);
-            //reset ticks to 0
+
+            // calculate the number of ticks you want to travel (cast to integer)
+            int targetTicks = (int) (2 * inches * countsPerInch);
+
+            // reset ticks to 0 on all motors
             for (DcMotor m : AllMotors)
                 m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            for (DcMotor m : AllMotors) {
+            // set target position on all motors
+            // mode must be changed to RUN_TO_POSITION
+
+            for(DcMotor m : AllMotors) {
                 m.setTargetPosition(targetTicks);
                 m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
+            // turn all motors on!
             for (DcMotor m : AllMotors)
                 m.setPower(speed/2);
 
+            // just keep looping while both motors are busy
+            // stop if driver station stop button pushed
             while (OpModeReference.opModeIsActive() && ((FL.isBusy() && FR.isBusy()) && (BL.isBusy() && BR.isBusy()))) {
                 OpModeReference.telemetry.addData("target ticks", targetTicks);
-                OpModeReference.telemetry.addData("fr ticks", FR.getCurrentPosition());
-                OpModeReference.telemetry.addData("fl ticks", FL.getCurrentPosition());
+                OpModeReference.telemetry.addData("right current", FR.getCurrentPosition());
+                OpModeReference.telemetry.addData("left current", FL.getCurrentPosition());
                 OpModeReference.telemetry.update();
             }
 
+            // once all motors get to where they need to be, turn them off
             stopDriving();
-            }
 
+            // set motors back to RUN_USING_ENCODERS
+            for (DcMotor m : AllMotors)
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
     }
 
     private void strafe (double inches, double speed){
         if (OpModeReference.opModeIsActive()) {
-            int targetTicks = (int) (countsPerInch * inches * (-12 / 11));
+            int targetTicks = (int) (countsPerInch * inches * 2);
             for (DcMotor m : AllMotors) {
                 m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -232,11 +246,12 @@ public class SevenTheRobot {
         }
     }
 
+//  im not sure why multiplying it by 1.05 works, but it seems to fix it
     public void strafeL (double inches, double speed) {
-        strafe(-inches, speed);
+        strafe(-inches * 1.05, speed);
     }
     public void strafeR (double inches, double speed) {
-        strafe(inches, speed);
+        strafe(inches * 1.05, speed);
     }
 
     private void diagonalLBR (double inches, double speed){

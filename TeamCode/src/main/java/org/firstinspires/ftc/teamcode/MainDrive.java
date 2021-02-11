@@ -51,10 +51,10 @@ public class MainDrive extends LinearOpMode {
 
             seven.bumper(gamepad1.a);
 
-            if (gamepad1.left_bumper)
-                seven.armUp();
-            else
+            if (gamepad1.b)
                 seven.armDown();
+            else
+                seven.armUp();
 
             if (gamepad1.right_bumper)
                 seven.closeClaw();
