@@ -52,7 +52,7 @@ public class SevenTheRobotVision {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    //Vuforia ky
+    //Vuforia key
     private static final String VUFORIA_KEY =
             "AZ3ryeD/////AAABmeY7zPkTgkgivhkyR/Wv11tYFIVOPjl+cbNTS5QTjJcDTzTxj2tsXDiSAYKEk0bwRs5LARKJohUORPn9Jg5ti0zDqAugPqNQaHDd24+J0E85fxlpZRPw75z+XNOy+x5s6zMR5hwHKKEwQ+/CxT8vppDZ4UOi1pns8UGn2OptQbZc42qEiwcaImzVmnC1OG+XLniEgCyrIFrCXEA727Wa+cKiaTAHIjQughcOmM7E9+gg8obCjU0iDt91ibtNCSB/PRzyXmxK2GRcwTl7DRHiu7DhaC5JqTWj4Yx4nMbkU0YF5tskagd47y0xyl1uzxi/eqJW5NxmhZjUravn9K5yl+w4NwWou5j5lnf/X/Mddn5N";
     //Tensorflow reference file
