@@ -51,10 +51,20 @@ public class MainDrive extends LinearOpMode {
 
             seven.bumper(gamepad1.a);
 
+            if (gamepad1.b)
+                seven.armDown();
+            else
+                seven.armUp();
+
+            if (gamepad1.right_bumper)
+                seven.closeClaw();
+            else
+                seven.openClaw();
+
             seven.mecanum();
             seven.launcherMono(outtakePower);
             seven.intakeMono(intakePower);
-            telemetry.addData("yo", gamepad1.right_trigger);
+            telemetry.addData("yo", seven.Arm.getCurrentPosition());
             telemetry.update();
         }
 

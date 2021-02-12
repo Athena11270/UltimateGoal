@@ -20,6 +20,7 @@ public class PsuedoAuto extends LinearOpMode{
         //seven.InitCamera();
         waitForStart();
 
+
         //move to be able to see the stack size
 
         //read the stack
