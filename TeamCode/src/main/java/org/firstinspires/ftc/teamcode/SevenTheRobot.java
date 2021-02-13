@@ -178,7 +178,6 @@ public class SevenTheRobot {
         }
         Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Arm.setDirection(DcMotorSimple.Direction.FORWARD);
         Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -329,6 +328,7 @@ public class SevenTheRobot {
 
     public void setArm (int pos) {
         Arm.setTargetPosition(pos);
+        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (pos > Arm.getCurrentPosition()) {
             Arm.setPower(-0.5);
         }
