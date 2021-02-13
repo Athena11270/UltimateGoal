@@ -11,17 +11,18 @@ public class Competition_Auto extends LinearOpMode{
         seven.InitCamera();
         waitForStart();
 
+        double speed1 = 0.75;
+        double speed2 = 0.5;
+
 
         //move to be able to see the stack size
         seven.closeClaw();
-        sleep(500);
         seven.armUp();
-        sleep(500);
-        seven.drive(-4, 0.25);
-        seven.strafeL(11, 0.5); //strafe right to align cam w/ rings
-        seven.drive(-32, 0.5); //drive back to align
+        seven.drive(-4, speed2);
+        seven.strafeL(11, speed1); //strafe right to align cam w/ rings
+        seven.drive(-32, speed1); //drive back to align
 
-        seven.strafeL(12, 0.5);
+        seven.strafeL(12, speed1);
 
         //read the stack
         String stackSize = seven.DetectStackSize();
@@ -29,49 +30,53 @@ public class Competition_Auto extends LinearOpMode{
         telemetry.update();
         seven.CloseCamera();
 
-        seven.strafeR(12, 0.5);
+        seven.strafeR(12, speed1);
 
-        seven.drive(-24, 0.5);
-        seven.strafeR(4.5, 0.5);
+        seven.drive(-24, speed1);
+        seven.strafeR(4.5, speed1);
 
-        int wait = 1000;
+        int wait = 400;
 
         seven.launcherMono(1);
         sleep(wait);
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
-        seven.strafeL(7.5, 0.5);
+        seven.strafeL(8, speed1);
         sleep(wait);
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
-        seven.strafeL(7, 0.5);
+        seven.strafeL(8, speed1);
         sleep(wait);
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
         seven.launcherMono(0);
 
-        seven.turn(-90, 0.5);
+        seven.turn(-90, speed1);
         int strafeAdd = 0;
         int forwardAdd = 0;
-        if(stackSize == seven.RINGS_FOUR) {
+        if(stackSize.equals(SevenTheRobot.RINGS_FOUR)) {
             strafeAdd = 48;
             forwardAdd = 24;
         }
 
-        else if(stackSize.equals("RINGS_ONE"))
+        else if(stackSize.equals(SevenTheRobot.RINGS_ONE))
             strafeAdd = 24;
         else
             forwardAdd = 24;
 
-        seven.strafeR(24 + strafeAdd, 0.5);
-        seven.drive(12 + forwardAdd, 0.5);
+        seven.strafeR(12, speed1);
+        seven.drive(14 + forwardAdd, speed1);
+        seven.strafeR(strafeAdd, speed1);
         seven.armDown();
-        sleep(500);
+        sleep((3 * wait)/4);
         seven.openClaw();
-        sleep(500);
+        sleep((3 * wait)/4);
+        seven.armUp();
+        sleep(wait);
+        seven.strafeL(strafeAdd, 1);
 
             //reminder: we're driving backwards, probably have to turn to drop in C
 //        if (stackSize.equals(seven.RINGS_FOUR)){
