@@ -10,11 +10,11 @@ public class TestAuto extends LinearOpMode{
         seven.initialize();
         waitForStart();
 
-        // drive in a 2 foot square
-        seven.drive(24, 0.5);
-        seven.strafeL(24, 0.5);
-        seven.drive(-24, 0.5);
-        seven.strafeR(24, 0.5);
+        // try turning
+        seven.turn(90, 0.5);
+        seven.turn(90, 0.5);
+        seven.turn(-90, 0.5);
+        seven.turn(-90, 0.5);
 
 
     }

@@ -46,6 +46,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
+//dont mind me just importing some imu stuff
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.nio.file.DirectoryIteratorException;
 
@@ -68,6 +74,9 @@ public class SevenTheRobot {
     public DcMotor[] LeftMotors = new DcMotor[2];
     public DcMotor[] RightMotors = new DcMotor[2];
     public DcMotor[] AllMotors = new DcMotor[4];
+
+
+    BNO055IMU imu;
 
     // Motors
     public DcMotor FL = null;
@@ -114,6 +123,15 @@ public class SevenTheRobot {
     }
 
     public void initialize() {
+
+        // imu stuff from last year cause i dont want to rebuild this from the ground up
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+
+        imu = OpModeReference.hardwareMap.get(BNO055IMU.class, "IMU");
+
         // wheels
         FL = OpModeReference.hardwareMap.get(DcMotor.class, "FL");
         FR = OpModeReference.hardwareMap.get(DcMotor.class, "FR");
@@ -163,6 +181,135 @@ public class SevenTheRobot {
         Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Arm.setDirection(DcMotorSimple.Direction.FORWARD);
         Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        // initialize the IMU
+        imu.initialize(parameters);
+    }
+
+    // This method makes the robot turn.
+    // DO NOT try to turn more than 180 degrees in either direction
+    // targetAngleDifference is the number of degrees you want to turn
+    // should be positive if turning left, negative if turning right
+// This method makes the robot turn.
+    // DO NOT try to turn more than 180 degrees in either direction
+    // targetAngleDifference is the number of degrees you want to turn
+    // should be positive if turning left, negative if turning right
+    public void turn(double targetAngleDifference, double power) {
+
+        // before starting the turn, take note of current angle as startAngle
+        double startAngle = GetCurrentZAngle();
+
+        // just some boolean variables to tell if we've stepped motor power down
+        // might actually want more than two steps
+        boolean firstStepDownComplete = false;
+        boolean secondStepDownComplete = false;
+
+        // if target angle is Negative, we're turning RIGHT
+        if (targetAngleDifference < 0) {
+            // turning right, so we want all right motors going backwards
+            for (DcMotor m : RightMotors)
+                m.setPower(-power/2);
+            for (DcMotor m : LeftMotors)
+                m.setPower(power/2);
+            // sleep a tenth of a second
+            // WARNING - not sure why this is needed - but sometimes right turns didn't work without
+            OpModeReference.sleep(100);
+
+            // we're turning right, so our target angle difference will be negative (ex: -90)
+            // so GetAngleDifference will go from 0 to -90
+            // keep turning while difference is greater than target
+            while (OpModeReference.opModeIsActive() && GetAngleDifference(startAngle) > targetAngleDifference) {
+
+                // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
+                if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
+                    for (DcMotor m : RightMotors)
+                        m.setPower(-power/4);
+                    for (DcMotor m : LeftMotors)
+                        m.setPower(power/4);
+                    secondStepDownComplete = true;
+                } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
+                    for (DcMotor m : RightMotors)
+                        m.setPower(-power/2);
+                    for (DcMotor m : LeftMotors)
+                        m.setPower(power/2);
+                    firstStepDownComplete = true;
+                }
+
+                OpModeReference.telemetry.addData("target", targetAngleDifference);
+                OpModeReference.telemetry.addData("current", GetAngleDifference(startAngle));
+//                OpModeReference.telemetry.addData("LeftMotorPower", ML.getPower());
+//                OpModeReference.telemetry.addData("RightMotorPower", MR.getPower());
+                OpModeReference.telemetry.update();
+            }
+            // if targetAngleDifference is Positive, we're turning LEFT
+        } else if (targetAngleDifference > 0) {
+            // turning left so want all left motors going backwards
+            for (DcMotor m : RightMotors)
+                m.setPower(power);
+            for (DcMotor m : LeftMotors)
+                m.setPower(-power);
+
+            // WARNING not sure if this sleep is needed - seemed necessary for right turns
+            OpModeReference.sleep (100);
+
+            // we're turning right, so our target angle difference will be positive (ex: 90)
+            // so GetAngleDifference will go from 0 to 90
+            // keep turning while difference is less than target
+            while (OpModeReference.opModeIsActive() && GetAngleDifference(startAngle) < targetAngleDifference) {
+
+                // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
+                if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
+                    for (DcMotor m : RightMotors)
+                        m.setPower(power/4);
+                    for (DcMotor m : LeftMotors)
+                        m.setPower(-power/4);
+                    secondStepDownComplete = true;
+                } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
+                    for (DcMotor m : RightMotors)
+                        m.setPower(power/2);
+                    for (DcMotor m : LeftMotors)
+                        m.setPower(-power/2);
+                    firstStepDownComplete = true;
+                }
+                OpModeReference.telemetry.addData("target", targetAngleDifference);
+                OpModeReference.telemetry.addData("current", GetAngleDifference(startAngle));
+                OpModeReference.telemetry.addData("LeftMotorPower", FL.getPower());
+                OpModeReference.telemetry.addData("RightMotorPower", FR.getPower());
+                OpModeReference.telemetry.update();
+            }
+        } else {
+            // is zero - not turning - just return
+            return;
+        }
+
+        // turn all motors off
+        stopDriving();
+    }
+
+    // this is a method to get the current heading/z angle from the IMU
+    // WE WANT THE Z ANGLE :)
+    // AxesOrder.XYZ means we want thirdAngle
+    // AxesOrder.ZYX would mean we want firstAngle
+    public double GetCurrentZAngle() {
+        Orientation currentAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        return currentAngles.thirdAngle;
+    }
+
+    // This method calculates the difference of the current angle from the start angle
+    // If you're left of your original angle, the value will be POSITIVE
+    // If you're right of your original angle, the value will be NEGATIVE
+    public double GetAngleDifference(double startAngle) {
+        double angleDifference = GetCurrentZAngle() - startAngle;
+
+        // handle going past the 0 or 180 barriers
+        // where we switch from positive to negative or vice versa
+        if (angleDifference < -180)
+            angleDifference += 360;
+        else if (angleDifference > 180)
+            angleDifference -=360;
+
+        return angleDifference;
     }
 
     //Autonomous Methods:
