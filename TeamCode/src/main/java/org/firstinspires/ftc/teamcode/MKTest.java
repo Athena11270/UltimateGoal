@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 // currently TeleOp, but will really only be used in Autonomous
-@Disabled
 @TeleOp(name="MKTest", group="")
 public class MKTest extends LinearOpMode {
 

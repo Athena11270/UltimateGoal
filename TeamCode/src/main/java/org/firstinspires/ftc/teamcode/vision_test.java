@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Autonomous(name="Competition_Auto", group="Linear Opmode")
-public class Competition_Auto extends LinearOpMode{
+@TeleOp(name="vision test", group="Linear Opmode")
+public class vision_test extends LinearOpMode{
     @Override
     public void runOpMode() {
         SevenTheRobot seven = new SevenTheRobot(this);
@@ -11,68 +12,15 @@ public class Competition_Auto extends LinearOpMode{
         seven.InitCamera();
         waitForStart();
 
+        while(opModeIsActive()) {
 
-        //move to be able to see the stack size
-        seven.closeClaw();
-        sleep(500);
-        seven.armUp();
-        sleep(500);
-        seven.drive(-4, 0.25);
-        seven.strafeL(11, 0.5); //strafe right to align cam w/ rings
-        seven.drive(-32, 0.5); //drive back to align
+            //read the stack
+            //String stackSize = seven.DetectStackSize();
+           //seven.CloseCamera();
 
-        seven.strafeL(12, 0.5);
-
-        //read the stack
-        String stackSize = seven.DetectStackSize();
-        telemetry.addData("Stack Size", stackSize);
-        telemetry.update();
-        seven.CloseCamera();
-
-        seven.strafeR(12, 0.5);
-
-        seven.drive(-24, 0.5);
-        seven.strafeR(4.5, 0.5);
-
-        int wait = 1000;
-
-        seven.launcherMono(1);
-        sleep(wait);
-        seven.bumper(true);
-        sleep(wait);
-        seven.bumper(false);
-        seven.strafeL(7.5, 0.5);
-        sleep(wait);
-        seven.bumper(true);
-        sleep(wait);
-        seven.bumper(false);
-        seven.strafeL(7, 0.5);
-        sleep(wait);
-        seven.bumper(true);
-        sleep(wait);
-        seven.bumper(false);
-        seven.launcherMono(0);
-
-        seven.turn(-90, 0.5);
-        int strafeAdd = 0;
-        int forwardAdd = 0;
-        if(stackSize == seven.RINGS_FOUR) {
-            strafeAdd = 48;
-            forwardAdd = 24;
-        }
-
-        else if(stackSize.equals("RINGS_ONE"))
-            strafeAdd = 24;
-        else
-            forwardAdd = 24;
-
-        seven.strafeR(24 + strafeAdd, 0.5);
-        seven.drive(12 + forwardAdd, 0.5);
-        seven.armDown();
-        sleep(500);
-        seven.openClaw();
-        sleep(500);
-
+            telemetry.addData("ring count, my dudes", seven.DetectStackSize());
+            telemetry.update();
+            sleep(1000);
             //reminder: we're driving backwards, probably have to turn to drop in C
 //        if (stackSize.equals(seven.RINGS_FOUR)){
 //            //move to zone C, drop wobble (15 points), move to shooting position
@@ -126,9 +74,10 @@ public class Competition_Auto extends LinearOpMode{
 //            //so we should just do the easiest goal and pray for the best I guess
 //        }
 
-        //either we do the high goal and run the same thing thrice (12/24/36 points)
-        //or we shoot & adjust thrice to hit the power shots (15/30/45 points)
-        //move to park on line (5 points)
-        //fully optimized, that gives us 65 points (assuming power shots).
+            //either we do the high goal and run the same thing thrice (12/24/36 points)
+            //or we shoot & adjust thrice to hit the power shots (15/30/45 points)
+            //move to park on line (5 points)
+            //fully optimized, that gives us 65 points (assuming power shots).
+        }
     }
 }
