@@ -77,6 +77,8 @@ public class Competition_Auto extends LinearOpMode{
         seven.armUp();
         sleep(wait);
         seven.strafeL(strafeAdd, 1);
+        seven.Arm.setTargetPosition(0);
+        sleep(1000);
 
             //reminder: we're driving backwards, probably have to turn to drop in C
 //        if (stackSize.equals(seven.RINGS_FOUR)){
@@ -110,7 +112,7 @@ public class Competition_Auto extends LinearOpMode{
 //            //scoot to launch line
 //
 //        }
-//        else if (stackSize.equals(seven.RINGS_ONE)){
+//        else if (stackSize.equals(seven.RINGS_ONE)){`
 //            //move to zone B, drop wobble (15 points), move to shooting position
 //            seven.drive(-56, 0.5);
 //            seven.strafeL(20, 0.5);

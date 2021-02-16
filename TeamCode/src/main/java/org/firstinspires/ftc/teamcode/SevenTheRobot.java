@@ -472,6 +472,35 @@ public class SevenTheRobot {
 //        OpModeReference.telemetry.addData("Rotation", rotate*movingSpeed);
     }
 
+    public void mecanumInv () {
+
+        double speed = OpModeReference.gamepad1.left_stick_y / Math.sqrt(2);
+        double strafe = OpModeReference.gamepad1.left_stick_x;
+        double rotate = -OpModeReference.gamepad1.right_stick_x;
+        double movingSpeed;
+
+        if (OpModeReference.gamepad1.left_bumper) {
+            movingSpeed = 0.4;
+        }
+        else {
+            movingSpeed = 0.8;
+        }
+
+        double leftFrontDir = Range.clip((speed - strafe - rotate), -1, 1) * movingSpeed;
+        double rightFrontDir = Range.clip((speed + strafe + rotate), -1, 1) * movingSpeed;
+        double leftBackDir = Range.clip((speed + strafe - rotate), -1, 1) * movingSpeed;
+        double rightBackDir = Range.clip((speed - strafe + rotate), -1, 1) * movingSpeed;
+
+        FL.setPower(leftFrontDir);
+        FR.setPower(rightFrontDir);
+        BL.setPower(leftBackDir);
+        BR.setPower(rightBackDir);
+
+//        OpModeReference.telemetry.addData("Central Velocity", speed*movingSpeed);
+//        OpModeReference.telemetry.addData("Lateral Velocity", strafe*movingSpeed);
+//        OpModeReference.telemetry.addData("Rotation", rotate*movingSpeed);
+    }
+
     // this is a method to initialize the camera, vuforia, and tensor flow
     // it needs to be called before WaitForStart()
     // keep separate from other initialization code - only use in autonomous where want to detect rings
