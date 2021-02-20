@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+@Disabled
 @TeleOp(name="Outtake Mono", group="Linear Opmode")
 public class OuttakeMono extends LinearOpMode {
 

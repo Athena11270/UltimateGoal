@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Path;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -48,6 +49,7 @@ import java.util.List;
 
 // This is not an OpMode.  It is a class that holds all the boring stuff
 
+@Disabled
 public class SevenTheRobotVision {
 
     // Declare OpMode members.

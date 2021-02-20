@@ -45,6 +45,8 @@ public class TwoPersonDrive extends LinearOpMode {
             double intakePower;
             if (gamepad2.a)
                 intakePower = 1;
+            else if (gamepad2.b)
+                intakePower = 0.9;
             else
                 intakePower = 0;
             double outtakePower = gamepad2.right_trigger;

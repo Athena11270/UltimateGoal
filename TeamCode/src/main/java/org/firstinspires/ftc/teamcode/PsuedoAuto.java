@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.SevenTheRobotVision.RINGS_FOUR;
 import static org.firstinspires.ftc.teamcode.SevenTheRobotVision.RINGS_NONE;
 import static org.firstinspires.ftc.teamcode.SevenTheRobotVision.RINGS_ONE;
 
+@Disabled
 @Autonomous(name="PsuedoAuto", group="Linear Opmode")
 public class PsuedoAuto extends LinearOpMode{
     @Override

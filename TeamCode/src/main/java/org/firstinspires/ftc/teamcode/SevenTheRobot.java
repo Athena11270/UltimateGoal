@@ -451,10 +451,10 @@ public class SevenTheRobot {
         double movingSpeed;
 
         if (OpModeReference.gamepad1.left_bumper) {
-            movingSpeed = 0.4;
+            movingSpeed = 0.5;
         }
         else {
-            movingSpeed = 0.8;
+            movingSpeed = 1;
         }
 
         double leftFrontDir = Range.clip((speed - strafe - rotate), -1, 1) * movingSpeed;
@@ -480,10 +480,10 @@ public class SevenTheRobot {
         double movingSpeed;
 
         if (OpModeReference.gamepad1.left_bumper) {
-            movingSpeed = 0.4;
+            movingSpeed = 0.5;
         }
         else {
-            movingSpeed = 0.8;
+            movingSpeed = 1;
         }
 
         double leftFrontDir = Range.clip((speed - strafe - rotate), -1, 1) * movingSpeed;

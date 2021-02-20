@@ -31,6 +31,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -54,6 +55,7 @@ import java.util.List;
 // ** follow - so hopefully will help provide some clarity.  Enjoy  --Mike                       **
 // ************************************************************************************************
 
+@Disabled
 public class MKTestHardware {
 
     // this is the vuforia key I got from https://developer.vuforia.com/license-manager

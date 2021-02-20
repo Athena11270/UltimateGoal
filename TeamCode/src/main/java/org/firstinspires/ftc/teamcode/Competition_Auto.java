@@ -37,21 +37,26 @@ public class Competition_Auto extends LinearOpMode{
 
         int wait = 400;
 
+        // spin up
         seven.launcherMono(1);
         sleep(wait);
+        // fire 1
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
         seven.strafeL(8, speed1);
+        // fire 2
         sleep(wait);
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
         seven.strafeL(8, speed1);
+        // fire 3
         sleep(wait);
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
+        // power back down
         seven.launcherMono(0);
 
         seven.turn(-90, speed1);
