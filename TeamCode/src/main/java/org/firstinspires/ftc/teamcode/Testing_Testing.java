@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -50,6 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+@Disabled
 @TeleOp(name="Testing Testing", group="Linear Opmode")
 public class Testing_Testing extends LinearOpMode {
 
@@ -57,14 +59,15 @@ public class Testing_Testing extends LinearOpMode {
     private DcMotor leftDrive = null;
 
 
-    int ticksPerRev = 28;
+    double ticksPerRev = 28;
 
+    double motorPower = 0;
     double inc = 0.02;
 
-    private int RPS() {
-        int start = leftDrive.getCurrentPosition();
+    private double RPS() {
+        double start = leftDrive.getCurrentPosition();
         sleep(500);
-        int end = leftDrive.getCurrentPosition();
+        double end = leftDrive.getCurrentPosition();
         return ((end - start) / ticksPerRev) * 2;
     }
 
@@ -75,6 +78,7 @@ public class Testing_Testing extends LinearOpMode {
 
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -84,27 +88,25 @@ public class Testing_Testing extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (gamepad1.a) {
-                leftDrive.setPower(1);
+                motorPower = 1;
             }
 
             if (gamepad1.b) {
-                leftDrive.setPower(0);
+                motorPower = 0;
             }
 
-            if (gamepad1.dpad_up) {
-                if (leftDrive.getPower() + inc < 1)
-                    leftDrive.setPower(leftDrive.getPower() + inc);
-                else leftDrive.setPower(1);
-            }
+            if (gamepad1.dpad_up)
+                motorPower += inc;
 
-            if (gamepad1.dpad_down) {
-                if (leftDrive.getPower() - inc > 0)
-                    leftDrive.setPower(leftDrive.getPower() - inc);
-                else leftDrive.setPower(0);
-            }
+            if (gamepad1.dpad_down)
+                motorPower -= inc;
+
+            motorPower = Range.clip(motorPower, 0, 1);
+
+            leftDrive.setPower(motorPower);
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("power", leftDrive.getPower());
+            telemetry.addData("power", motorPower);
             telemetry.addData("speed",RPS());
             telemetry.update();
         }

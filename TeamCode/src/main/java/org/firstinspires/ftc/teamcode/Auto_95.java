@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Disabled
-@Autonomous(name="Top Auto", group="Linear Opmode")
-public class Auto_Top extends LinearOpMode{
+@Autonomous(name="Auto Mid", group="Linear Opmode")
+public class Auto_95 extends LinearOpMode{
     @Override
     public void runOpMode() {
         SevenTheRobot seven = new SevenTheRobot(this);
@@ -22,7 +20,7 @@ public class Auto_Top extends LinearOpMode{
         seven.armUp();
         seven.drive(-4, speed2);
         seven.strafeL(11, speed1); //strafe right to align cam w/ rings
-        seven.drive(-32, speed1); //drive back to align
+        seven.drive(-34, speed1); //drive back to align
 
         seven.strafeL(12, speed1);
 
@@ -34,25 +32,25 @@ public class Auto_Top extends LinearOpMode{
 
         seven.strafeR(12, speed1);
 
-        seven.drive(-24, speed1);
+        seven.drive(-22, speed1);
         seven.strafeR(4.5, speed1);
 
         int wait = 400;
 
         // spin up
-        seven.launcherMono(1);
-        sleep(wait);
+        seven.launcherMono(0.95);
+        sleep(wait*2);
         // fire 1
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
-        sleep(wait*2);
+        seven.strafeL(8.5, speed1);
         // fire 2
         sleep(wait);
         seven.bumper(true);
         sleep(wait);
         seven.bumper(false);
-        sleep(wait*2);
+        seven.strafeL(8.5, speed1);
         // fire 3
         sleep(wait);
         seven.bumper(true);
@@ -78,9 +76,9 @@ public class Auto_Top extends LinearOpMode{
         seven.drive(14 + forwardAdd, speed1);
         seven.strafeR(strafeAdd, speed1);
         seven.armDown();
-        sleep((3 * wait)/4);
+        sleep(wait);
         seven.openClaw();
-        sleep((3 * wait)/4);
+        sleep(wait);
         seven.armUp();
         sleep(wait);
         seven.strafeL(strafeAdd, 1);

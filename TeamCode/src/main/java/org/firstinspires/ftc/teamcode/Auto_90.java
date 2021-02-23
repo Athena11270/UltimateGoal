@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Auto Fixed", group="Linear Opmode")
-public class Auto_Fixed extends LinearOpMode{
+@Autonomous(name="Auto High", group="Linear Opmode")
+public class Auto_90 extends LinearOpMode{
     @Override
     public void runOpMode() {
         SevenTheRobot seven = new SevenTheRobot(this);
@@ -33,13 +33,13 @@ public class Auto_Fixed extends LinearOpMode{
         seven.strafeR(12, speed1);
 
         seven.drive(-22, speed1);
-        seven.strafeR(3.5, speed1);
+        seven.strafeR(4.5, speed1);
 
         int wait = 400;
 
         // spin up
-        seven.launcherMono(1);
-        sleep(wait);
+        seven.launcherMono(0.9);
+        sleep(wait*2);
         // fire 1
         seven.bumper(true);
         sleep(wait);
