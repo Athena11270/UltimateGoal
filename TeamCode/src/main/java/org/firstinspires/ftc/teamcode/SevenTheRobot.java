@@ -186,6 +186,17 @@ public class SevenTheRobot {
         imu.initialize(parameters);
     }
 
+    public void getOuttakeMult(double target){
+        double power = 0.8;
+        OT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        OT.setPower(1);
+        OpModeReference.sleep(1000);
+        OT.setPower(power);
+        double prevTick = OT.getCurrentPosition();
+        double deltaTick = 0;
+
+    }
+
     // This method makes the robot turn.
     // DO NOT try to turn more than 180 degrees in either direction
     // targetAngleDifference is the number of degrees you want to turn
