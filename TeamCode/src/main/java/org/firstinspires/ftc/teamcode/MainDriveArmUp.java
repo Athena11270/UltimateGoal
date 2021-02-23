@@ -32,7 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Main Drive", group="Linear Opmode")
+@TeleOp(name="Main Drive Static", group="Linear Opmode")
 public class MainDriveArmUp extends LinearOpMode {
 
     @Override
