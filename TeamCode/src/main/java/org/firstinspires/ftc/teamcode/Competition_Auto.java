@@ -10,6 +10,7 @@ public class Competition_Auto extends LinearOpMode{
         SevenTheRobot seven = new SevenTheRobot(this);
         seven.initialize();
         seven.InitCamera();
+        seven.closeClaw();
         waitForStart();
 
         double speed1 = 0.75;
@@ -20,7 +21,7 @@ public class Competition_Auto extends LinearOpMode{
         seven.closeClaw();
         seven.armUp();
         seven.drive(-4, speed2);
-        seven.strafeL(11, speed1); //strafe right to align cam w/ rings
+        seven.strafeL(4, speed1); //strafe right to align cam w/ rings
         seven.drive(-34, speed1); //drive back to align
 
         seven.strafeL(12, speed1);
