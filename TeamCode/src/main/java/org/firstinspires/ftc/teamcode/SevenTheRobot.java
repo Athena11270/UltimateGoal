@@ -92,10 +92,10 @@ public class SevenTheRobot {
     /*private DcMotor LR = null;
     private DcMotor LL = null;*/
     //in case of 1 motor for launcher
-    private DcMotor OT = null;
+    public DcMotor OT = null;
 
     // Intake
-    private DcMotor IT = null;
+    public DcMotor IT = null;
 
     // servo for reservoir
     public Servo BP = null;
@@ -167,7 +167,7 @@ public class SevenTheRobot {
         LL.setDirection(DcMotor.Direction.REVERSE);*/
         OT.setDirection(DcMotor.Direction.FORWARD);
         IT.setDirection(DcMotor.Direction.FORWARD);
-        OT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        OT.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         for (DcMotor l : LeftMotors)
             l.setDirection(DcMotorSimple.Direction.REVERSE);
