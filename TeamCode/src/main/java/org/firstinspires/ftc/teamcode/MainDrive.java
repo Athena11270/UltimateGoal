@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="Main Drive", group="Linear Opmode")
+@TeleOp(name="One Person Drive", group="Linear Opmode")
 public class MainDrive extends LinearOpMode {
 
     @Override

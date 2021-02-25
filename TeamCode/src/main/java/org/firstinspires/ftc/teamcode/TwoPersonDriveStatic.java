@@ -32,8 +32,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="One Person Drive Static", group="Linear Opmode")
-public class MainDriveArmUp extends LinearOpMode {
+@TeleOp(name="Two Person Drive", group="Linear Opmode")
+public class TwoPersonDriveStatic extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -42,19 +42,27 @@ public class MainDriveArmUp extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            double intakePower = gamepad1.right_trigger;
-            double outtakePower = gamepad1.right_trigger;
+            double intakePower;
+            if (gamepad2.a)
+                intakePower = 1;
+            else if (gamepad2.b)
+                intakePower = 0.9;
+            else if (gamepad2.y)
+                intakePower = -1;
+            else
+                intakePower = 0;
+            double outtakePower = gamepad2.right_trigger;
 
-            seven.bumper(gamepad1.right_bumper);
+            seven.bumper(gamepad2.right_bumper);
 
             if (gamepad1.b)
                 //seven.armDown();
                 seven.setArm(535);
             else
                 //seven.armUp();
-            seven.setArm(0);
+                seven.setArm(0);
 
-            if (gamepad1.left_trigger > 0.25)
+            if (gamepad2.left_trigger > 0.25)
                 seven.closeClaw();
             else
                 seven.openClaw();
