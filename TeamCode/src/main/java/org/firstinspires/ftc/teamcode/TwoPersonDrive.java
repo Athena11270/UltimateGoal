@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="Two Person Drive", group="Linear Opmode")
 public class TwoPersonDrive extends LinearOpMode {
@@ -54,6 +55,11 @@ public class TwoPersonDrive extends LinearOpMode {
             double outtakePower = gamepad2.right_trigger;
 
             seven.bumper(gamepad2.right_bumper);
+
+            if (gamepad2.dpad_up)
+                seven.OT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            else if (gamepad2.dpad_down)
+                seven.OT.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             if (gamepad2.left_bumper)
                 seven.armDown();

@@ -32,7 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Two Person Drive", group="Linear Opmode")
+@TeleOp(name="Two Person Static Drive", group="Linear Opmode")
 public class TwoPersonDriveStatic extends LinearOpMode {
 
     @Override
