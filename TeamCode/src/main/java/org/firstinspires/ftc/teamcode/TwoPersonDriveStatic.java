@@ -44,9 +44,9 @@ public class TwoPersonDriveStatic extends LinearOpMode {
         while (opModeIsActive()){
             double intakePower;
             if (gamepad2.a)
-                intakePower = 1;
-            else if (gamepad2.b)
                 intakePower = 0.9;
+            else if (gamepad2.b)
+                intakePower = 0.8;
             else if (gamepad2.y)
                 intakePower = -1;
             else
