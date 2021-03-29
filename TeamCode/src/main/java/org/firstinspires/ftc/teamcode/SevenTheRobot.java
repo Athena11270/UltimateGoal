@@ -442,7 +442,7 @@ public class SevenTheRobot {
         if (trig)
             BP.setPosition(0);
         else
-            BP.setPosition(0.55);
+            BP.setPosition(1);
     }
 
     public void mecanum () {
