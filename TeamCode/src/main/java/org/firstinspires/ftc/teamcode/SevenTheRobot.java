@@ -111,7 +111,7 @@ public class SevenTheRobot {
     // just gonna define some variables for encoders real quick dont mind me
     static final double mmPerInch               = 25.4f;    // this is jus math tho
     static final double countsPerRevolution     = 383.6f;   // Gobilda Yellowjacket 435
-    static final double wheelDiameterMM         = 100;      // For figuring circumference
+    static final double wheelDiameterMM         = 96;      // For figuring circumference
     static final double WheelDiameterIn         = wheelDiameterMM / mmPerInch;
     static final double wheelCircumferenceIn    = WheelDiameterIn * Math.PI;
     static final double countsPerInch         = (countsPerRevolution / wheelCircumferenceIn);
@@ -354,7 +354,8 @@ public class SevenTheRobot {
         if (OpModeReference.opModeIsActive()) {
 
             // calculate the number of ticks you want to travel (cast to integer)
-            int targetTicks = (int) (2 * inches * countsPerInch);
+            //int targetTicks = (int) (2 * inches * countsPerInch);
+            int targetTicks = (int) (inches * countsPerInch);
 
             // reset ticks to 0 on all motors
             for (DcMotor m : AllMotors)
@@ -376,8 +377,11 @@ public class SevenTheRobot {
             // stop if driver station stop button pushed
             while (OpModeReference.opModeIsActive() && ((FL.isBusy() && FR.isBusy()) && (BL.isBusy() && BR.isBusy()))) {
                 OpModeReference.telemetry.addData("target ticks", targetTicks);
-                OpModeReference.telemetry.addData("right current", FR.getCurrentPosition());
-                OpModeReference.telemetry.addData("left current", FL.getCurrentPosition());
+                OpModeReference.telemetry.addData("FR current", FR.getCurrentPosition());
+                OpModeReference.telemetry.addData("FL current", FL.getCurrentPosition());
+                OpModeReference.telemetry.addData("BL current", BL.getCurrentPosition());
+                OpModeReference.telemetry.addData("BR current", BR.getCurrentPosition());
+
                 OpModeReference.telemetry.update();
             }
 
@@ -392,7 +396,8 @@ public class SevenTheRobot {
 
     private void strafe (double inches, double speed){
         if (OpModeReference.opModeIsActive()) {
-            int targetTicks = (int) (countsPerInch * inches * 2);
+            //int targetTicks = (int) (countsPerInch * inches * 2);
+            int targetTicks = (int) (countsPerInch * inches);
             for (DcMotor m : AllMotors) {
                 m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

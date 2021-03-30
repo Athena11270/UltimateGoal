@@ -15,13 +15,15 @@ public class Competition_Auto extends LinearOpMode{
         seven.OT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
 
-        double speed1 = 0.75;
-        double speed2 = 0.5;
+        //double speed1 = 0.75;
+        //double speed2 = 0.5;
+        double speed1 = 0.375;
+        double speed2 = 0.25;
 
 
         //move to be able to see the stack size
         seven.closeClaw();
-        seven.armUp();
+        //seven.armUp();
         seven.drive(-4, speed2);
         seven.strafeL(4, speed1); //strafe right to align cam w/ rings
         seven.drive(-34, speed1); //drive back to align
@@ -79,6 +81,8 @@ public class Competition_Auto extends LinearOpMode{
         seven.strafeR(12, speed1);
         seven.drive(14 + forwardAdd, speed1);
         seven.strafeR(strafeAdd, speed1);
+        seven.armUp();
+        sleep(wait);
         seven.armDown();
         sleep(wait);
         seven.openClaw();
