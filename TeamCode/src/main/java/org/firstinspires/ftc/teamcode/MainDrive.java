@@ -46,12 +46,18 @@ public class MainDrive extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            double intakePower = gamepad1.right_trigger;
+            double intakePower = 0;
+            if (gamepad1.a)
+                intakePower = 0.8;
+            else if (gamepad1.b)
+                intakePower = 0.7;
+            else if (gamepad1.y)
+                intakePower = -1;
             double outtakePower = gamepad1.right_trigger;
 
             seven.bumper(gamepad1.right_bumper);
 
-            if (gamepad1.b)
+            if (gamepad1.x)
                 seven.armDown();
             else
                 seven.armUp();
