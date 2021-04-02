@@ -31,6 +31,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -52,6 +54,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+//blinkin import
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import java.nio.file.DirectoryIteratorException;
 
@@ -99,6 +103,12 @@ public class SevenTheRobot {
 
     // servo for reservoir
     public Servo BP = null;
+
+    //lights :)
+    RevBlinkinLedDriver blinkinLedDriver;
+    RevBlinkinLedDriver.BlinkinPattern pattern;
+
+    int lightToggle;
 
     //Vision Variables tm
     public static final String RINGS_NONE = "ZERO_RINGS";
@@ -181,6 +191,9 @@ public class SevenTheRobot {
         Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Arm.setDirection(DcMotorSimple.Direction.FORWARD);
         Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        blinkinLedDriver = OpModeReference.hardwareMap.get(RevBlinkinLedDriver.class, "lights");
+        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
 
 
         // initialize the IMU
@@ -434,6 +447,26 @@ public class SevenTheRobot {
 
     //Tele-op Methods:
 
+    public void colors () {
+        if (OpModeReference.gamepad1.y)
+            lightToggle = 1;
+        else if (OpModeReference.gamepad1.b)
+            lightToggle = 2;
+        else if (OpModeReference.gamepad1.a)
+            lightToggle = 3;
+        else if (OpModeReference.gamepad1.x)
+            lightToggle = 4;
+
+        if (lightToggle == 1)
+            blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
+        else if (lightToggle == 2)
+            blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_RAINBOW_PALETTE);
+        else if (lightToggle == 3)
+            blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.FIRE_LARGE);
+        else if (lightToggle == 4)
+            blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.TWINKLES_PARTY_PALETTE);
+    }
+
     public void launcherMono (double outtakePower) {
         OT.setPower(-outtakePower);
     }
@@ -512,6 +545,8 @@ public class SevenTheRobot {
     // it needs to be called before WaitForStart()
     // keep separate from other initialization code - only use in autonomous where want to detect rings
     public void InitCamera() {
+        blinkinLedDriver.close();
+        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         // make sure webcam name in hardware config matches deviceName here
@@ -544,6 +579,7 @@ public class SevenTheRobot {
     public void CloseCamera() {
         if (objectDetector != null)
             objectDetector.shutdown();
+        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
     }
 
     // the result of this method will be one of our predefined strings from above
