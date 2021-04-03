@@ -82,13 +82,13 @@ public class Competition_Auto extends LinearOpMode{
         seven.drive(14 + forwardAdd, speed1);
         seven.strafeR(strafeAdd, speed1);
         seven.armUp();
-        sleep(wait);
+        sleep(wait*2);
         seven.armDown();
-        sleep(wait);
+        sleep(wait*2);
         seven.openClaw();
-        sleep(wait);
+        sleep(wait*2);
         seven.armUp();
-        sleep(wait);
+        sleep(wait*2);
         seven.strafeL(strafeAdd, 1);
         seven.Arm.setTargetPosition(0);
         sleep(1000);

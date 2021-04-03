@@ -22,10 +22,12 @@ public class auto_test_again extends LinearOpMode{
 
         //move to be able to see the stack size
         seven.closeClaw();
-        //seven.armUp();
-        seven.bbDrive(-4, speed1);
-        seven.bbDrive(-34, speed1);
-        seven.bbDrive(4, speed1);
-        seven.bbDrive(34, speed1);
+//        seven.armUp();
+//        seven.bbDrive(-4, speed1);
+//        seven.bbDrive(-34, speed1);
+//        seven.bbDrive(4, speed1);
+//        seven.bbDrive(34, speed1);
+        seven.bbStrafe(36, speed2);
+        seven.bbStrafe(-36, speed2);
     }
 }

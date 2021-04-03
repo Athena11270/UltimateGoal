@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Disabled
+
 @Autonomous(name="AutonomousTest", group="Linear Opmode")
 public class Auto_Test extends LinearOpMode{
     @Override
@@ -16,8 +16,8 @@ public class Auto_Test extends LinearOpMode{
         seven.OT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
 
-        double speed1 = 0.375;
-        double speed2 = 0.25;
+        double speed1 = 0.2;
+        double speed2 = 0.1;
 
 
         //move to be able to see the stack size

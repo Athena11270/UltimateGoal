@@ -403,6 +403,133 @@ public class SevenTheRobot {
         }
     }
 
+    public void bbStrafe(double inches, double speed) {
+
+        double driveSpeed = speed * autoSpeedMult; // defined at top of class
+
+        // Ensure that the opmode is still active
+        if (OpModeReference.opModeIsActive()) {
+
+            // calculate the number of ticks you want to travel (cast to integer)
+            //int targetTicks = (int) (2 * inches * countsPerInch);
+
+            //swag
+            int mult = 1;
+            if (inches < 0)
+                mult = -1;
+            int targetTicks = (int) (Math.abs(inches) * 1.4f * countsPerInch);
+            int rampThreshInches = (int) (3);
+            int rampThreshStart = (int) (rampThreshInches * countsPerInch);
+            int rampThreshEnd = (int) (targetTicks - (rampThreshInches * countsPerInch));
+
+            int rampThreshStart1 = (int) (rampThreshStart * 0.05);
+            int rampThreshStart2 = (int) (rampThreshStart * 0.125);
+            int rampThreshStart3 = (int) (rampThreshStart * 0.25);
+            int rampThreshEnd1 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.75));
+            int rampThreshEnd2 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.875));
+            int rampThreshEnd3 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.95));
+            //int rampThreshEnd4 = (int) (targetTicks);
+
+
+            if (Math.abs(targetTicks) <= (rampThreshStart + rampThreshEnd)) {
+                rampThreshStart = targetTicks/2;
+                rampThreshEnd = targetTicks/2;
+            }
+
+
+            // reset ticks to 0 on all motors
+            for (DcMotor m : AllMotors)
+                m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // set target position on all motors
+            // mode must be changed to RUN_TO_POSITION
+
+            FL.setTargetPosition(targetTicks*mult);
+            FR.setTargetPosition(-targetTicks*mult);
+            BL.setTargetPosition(-targetTicks*mult);
+            BR.setTargetPosition(targetTicks*mult);
+
+            for(DcMotor m : AllMotors) {
+                m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+            // turn all motors on!
+//            for (DcMotor m : AllMotors)
+//                m.setPower(driveSpeed * 0.1);
+
+            setDriveMotorPower(driveSpeed, 0.1);
+
+            // just keep looping while the motors are busy
+            // stop if driver station stop button pushed
+            while (OpModeReference.opModeIsActive() && ((FL.isBusy() && FR.isBusy()) && (BL.isBusy() && BR.isBusy()))) {
+                int pos = (int) Math.abs(-FR.getCurrentPosition()+FL.getCurrentPosition()+BR.getCurrentPosition()-BL.getCurrentPosition())/4;
+
+                OpModeReference.telemetry.addData("target ticks", targetTicks);
+                OpModeReference.telemetry.addData("pos", pos);
+                OpModeReference.telemetry.addData("FR current", -FR.getCurrentPosition());
+                OpModeReference.telemetry.addData("FL current", FL.getCurrentPosition());
+                OpModeReference.telemetry.addData("BL current", -BL.getCurrentPosition());
+                OpModeReference.telemetry.addData("BR current", BR.getCurrentPosition());
+
+
+                if (pos <= rampThreshStart1){
+                    setDriveMotorPower(driveSpeed, .1);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart1);
+                    OpModeReference.telemetry.addData("mult", .1);
+                }
+                else if (pos <= rampThreshStart2){
+                    setDriveMotorPower(driveSpeed, .25);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart2);
+                    OpModeReference.telemetry.addData("mult", .25);
+                }
+                else if (pos <= rampThreshStart3){
+                    setDriveMotorPower(driveSpeed, .5);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart3);
+                    OpModeReference.telemetry.addData("mult", .5);
+                }
+                else if (pos <= rampThreshStart){
+                    setDriveMotorPower(driveSpeed, .75);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart);
+                    OpModeReference.telemetry.addData("mult", .75);
+                }
+
+                else if (pos >= rampThreshEnd3){
+                    setDriveMotorPower(driveSpeed, .1);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd3);
+                    OpModeReference.telemetry.addData("mult", .1);
+                }
+                else if (pos >= rampThreshEnd2){
+                    setDriveMotorPower(driveSpeed, .25);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd2);
+                    OpModeReference.telemetry.addData("mult", .25);
+                }
+                else if (pos >= rampThreshEnd1){
+                    setDriveMotorPower(driveSpeed, .5);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd1);
+                    OpModeReference.telemetry.addData("mult", .5);
+                }
+                else if (pos >= rampThreshEnd){
+                    setDriveMotorPower(driveSpeed, .75);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd);
+                    OpModeReference.telemetry.addData("mult", .75);
+                }
+                else {
+                    setDriveMotorPower(driveSpeed, 1);
+                    OpModeReference.telemetry.addData("threshold", "none :)");
+                    OpModeReference.telemetry.addData("mult", 1);
+                }
+                OpModeReference.telemetry.update();
+            }
+
+            // once all motors get to where they need to be, turn them off
+            stopDriving();
+
+            // set motors back to RUN_USING_ENCODERS
+            for (DcMotor m : AllMotors)
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
     public void bbDrive(double inches, double speed) {
 
         double driveSpeed = speed * autoSpeedMult; // defined at top of class
@@ -412,17 +539,22 @@ public class SevenTheRobot {
 
             // calculate the number of ticks you want to travel (cast to integer)
             //int targetTicks = (int) (2 * inches * countsPerInch);
-            int targetTicks = (int) (inches * countsPerInch);
+
+            //swag
+            int mult = 1;
+            if (inches < 0)
+                mult = -1;
+            int targetTicks = (int) (Math.abs(inches) * countsPerInch);
             int rampThreshInches = (int) (3);
             int rampThreshStart = (int) (rampThreshInches * countsPerInch);
             int rampThreshEnd = (int) (targetTicks - (rampThreshInches * countsPerInch));
 
-            int rampThreshStart1 = (int) (rampThreshStart * 0.25);
-            int rampThreshStart2 = (int) (rampThreshStart * 0.5);
-            int rampThreshStart3 = (int) (rampThreshStart * 0.75);
-            int rampThreshEnd1 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.25));
-            int rampThreshEnd2 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.5));
-            int rampThreshEnd3 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.75));
+            int rampThreshStart1 = (int) (rampThreshStart * 0.1);
+            int rampThreshStart2 = (int) (rampThreshStart * 0.25);
+            int rampThreshStart3 = (int) (rampThreshStart * 0.5);
+            int rampThreshEnd1 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.5));
+            int rampThreshEnd2 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.75));
+            int rampThreshEnd3 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.9));
             //int rampThreshEnd4 = (int) (targetTicks);
 
 
@@ -440,7 +572,7 @@ public class SevenTheRobot {
             // mode must be changed to RUN_TO_POSITION
 
             for(DcMotor m : AllMotors) {
-                m.setTargetPosition(targetTicks);
+                m.setTargetPosition(targetTicks*mult);
                 m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
@@ -458,42 +590,6 @@ public class SevenTheRobot {
                 OpModeReference.telemetry.addData("FL current", FL.getCurrentPosition());
                 OpModeReference.telemetry.addData("BL current", BL.getCurrentPosition());
                 OpModeReference.telemetry.addData("BR current", BR.getCurrentPosition());
-                //telemetry for speed phase
-                /*
-                something something if currentticks <= ramptreshstart run step up loop with more precise values
-                if >= rampthreshend run step down loop (potential error, for distances less than
-                2*rampthreshinches, it'll equal both start&end at the midpoint)
-                else normal junk
-                */
-                //maybe set up a () funct that can run the following & slot motors in
-//                if (FR.getCurrentPosition() <= rampThreshStart1){
-//                    FR.setPower(speed * autoSpeedMult * 0.1);
-//                }
-//                else if (FR.getCurrentPosition() <= rampThreshStart2){
-//                    FR.setPower(speed * autoSpeedMult * 0.25);
-//                }
-//                else if (FR.getCurrentPosition() <= rampThreshStart3){
-//                    FR.setPower(speed * autoSpeedMult * 0.5);
-//                }
-//                else if (FR.getCurrentPosition() <= rampThreshStart){
-//                    FR.setPower(speed * autoSpeedMult * 0.75);
-//                }
-//
-//                else if (FR.getCurrentPosition() >= rampThreshEnd3){
-//                    FR.setPower(speed * autoSpeedMult * 0.1);
-//                }
-//                else if (FR.getCurrentPosition() >= rampThreshEnd2){
-//                    FR.setPower(speed * autoSpeedMult * 0.25);
-//                }
-//                else if (FR.getCurrentPosition() >= rampThreshEnd1){
-//                    FR.setPower(speed * autoSpeedMult * 0.5);
-//                }
-//                else if (FR.getCurrentPosition() >= rampThreshEnd){
-//                    FR.setPower(speed * autoSpeedMult * 0.75);
-//                }
-//                else {
-//                    FR.setPower(speed * autoSpeedMult);
-//                }
 
                 int pos = (int) Math.abs(FR.getCurrentPosition()+FL.getCurrentPosition()+BR.getCurrentPosition()+BL.getCurrentPosition())/4;
 
