@@ -31,11 +31,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Path;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -56,8 +52,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 //blinkin import
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-
-import java.nio.file.DirectoryIteratorException;
 
 // This is not an OpMode.  It is a class that holds all the boring stuff
 
@@ -105,10 +99,10 @@ public class SevenTheRobot {
     public Servo BP = null;
 
     //lights :)
-    RevBlinkinLedDriver blinkinLedDriver;
+    /*RevBlinkinLedDriver blinkinLedDriver;
     RevBlinkinLedDriver.BlinkinPattern pattern;
 
-    int lightToggle;
+    int lightToggle; */
 
     //Vision Variables tm
     public static final String RINGS_NONE = "ZERO_RINGS";
@@ -125,6 +119,8 @@ public class SevenTheRobot {
     static final double WheelDiameterIn         = wheelDiameterMM / mmPerInch;
     static final double wheelCircumferenceIn    = WheelDiameterIn * Math.PI;
     static final double countsPerInch         = (countsPerRevolution / wheelCircumferenceIn);
+
+    double autoSpeedMult = .5;
 
     // you will need a reference to your OpMode
     private LinearOpMode OpModeReference;
@@ -192,8 +188,8 @@ public class SevenTheRobot {
         Arm.setDirection(DcMotorSimple.Direction.FORWARD);
         Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        blinkinLedDriver = OpModeReference.hardwareMap.get(RevBlinkinLedDriver.class, "lights");
-        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
+        /*blinkinLedDriver = OpModeReference.hardwareMap.get(RevBlinkinLedDriver.class, "lights");
+        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);*/
 
 
         // initialize the IMU
@@ -223,9 +219,9 @@ public class SevenTheRobot {
         if (targetAngleDifference < 0) {
             // turning right, so we want all right motors going backwards
             for (DcMotor m : RightMotors)
-                m.setPower(-power/2);
+                m.setPower(-power * autoSpeedMult);
             for (DcMotor m : LeftMotors)
-                m.setPower(power/2);
+                m.setPower(power * autoSpeedMult);
             // sleep a tenth of a second
             // WARNING - not sure why this is needed - but sometimes right turns didn't work without
             OpModeReference.sleep(100);
@@ -238,15 +234,15 @@ public class SevenTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(-power/4);
+                        m.setPower(-power * autoSpeedMult /2);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(power/4);
+                        m.setPower(power * autoSpeedMult /2);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(-power/2);
+                        m.setPower(-power * autoSpeedMult);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(power/2);
+                        m.setPower(power * autoSpeedMult);
                     firstStepDownComplete = true;
                 }
 
@@ -275,15 +271,15 @@ public class SevenTheRobot {
                 // THIS CODE IS FOR STEPPING DOWN MOTOR POWER
                 if (!secondStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.75) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(power/4);
+                        m.setPower(power * autoSpeedMult /2);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(-power/4);
+                        m.setPower(-power * autoSpeedMult /2);
                     secondStepDownComplete = true;
                 } else if (!firstStepDownComplete && GetAngleDifference(startAngle) / targetAngleDifference > 0.50) {
                     for (DcMotor m : RightMotors)
-                        m.setPower(power/2);
+                        m.setPower(power * autoSpeedMult);
                     for (DcMotor m : LeftMotors)
-                        m.setPower(-power/2);
+                        m.setPower(-power * autoSpeedMult);
                     firstStepDownComplete = true;
                 }
                 OpModeReference.telemetry.addData("target", targetAngleDifference);
@@ -407,6 +403,163 @@ public class SevenTheRobot {
         }
     }
 
+    public void bbDrive(double inches, double speed) {
+
+        double driveSpeed = speed * autoSpeedMult; // defined at top of class
+
+        // Ensure that the opmode is still active
+        if (OpModeReference.opModeIsActive()) {
+
+            // calculate the number of ticks you want to travel (cast to integer)
+            //int targetTicks = (int) (2 * inches * countsPerInch);
+            int targetTicks = (int) (inches * countsPerInch);
+            int rampThreshInches = (int) (3);
+            int rampThreshStart = (int) (rampThreshInches * countsPerInch);
+            int rampThreshEnd = (int) (targetTicks - (rampThreshInches * countsPerInch));
+
+            int rampThreshStart1 = (int) (rampThreshStart * 0.25);
+            int rampThreshStart2 = (int) (rampThreshStart * 0.5);
+            int rampThreshStart3 = (int) (rampThreshStart * 0.75);
+            int rampThreshEnd1 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.25));
+            int rampThreshEnd2 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.5));
+            int rampThreshEnd3 = (int) ((targetTicks - rampThreshEnd) + (rampThreshEnd * 0.75));
+            //int rampThreshEnd4 = (int) (targetTicks);
+
+
+            if (Math.abs(targetTicks) <= (rampThreshStart + rampThreshEnd)) {
+                rampThreshStart = targetTicks/2;
+                rampThreshEnd = targetTicks/2;
+            }
+
+
+            // reset ticks to 0 on all motors
+            for (DcMotor m : AllMotors)
+                m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // set target position on all motors
+            // mode must be changed to RUN_TO_POSITION
+
+            for(DcMotor m : AllMotors) {
+                m.setTargetPosition(targetTicks);
+                m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+            // turn all motors on!
+//            for (DcMotor m : AllMotors)
+//                m.setPower(driveSpeed * 0.1);
+
+            setDriveMotorPower(driveSpeed, 0.1);
+
+            // just keep looping while the motors are busy
+            // stop if driver station stop button pushed
+            while (OpModeReference.opModeIsActive() && ((FL.isBusy() && FR.isBusy()) && (BL.isBusy() && BR.isBusy()))) {
+                OpModeReference.telemetry.addData("target ticks", targetTicks);
+                OpModeReference.telemetry.addData("FR current", FR.getCurrentPosition());
+                OpModeReference.telemetry.addData("FL current", FL.getCurrentPosition());
+                OpModeReference.telemetry.addData("BL current", BL.getCurrentPosition());
+                OpModeReference.telemetry.addData("BR current", BR.getCurrentPosition());
+                //telemetry for speed phase
+                /*
+                something something if currentticks <= ramptreshstart run step up loop with more precise values
+                if >= rampthreshend run step down loop (potential error, for distances less than
+                2*rampthreshinches, it'll equal both start&end at the midpoint)
+                else normal junk
+                */
+                //maybe set up a () funct that can run the following & slot motors in
+//                if (FR.getCurrentPosition() <= rampThreshStart1){
+//                    FR.setPower(speed * autoSpeedMult * 0.1);
+//                }
+//                else if (FR.getCurrentPosition() <= rampThreshStart2){
+//                    FR.setPower(speed * autoSpeedMult * 0.25);
+//                }
+//                else if (FR.getCurrentPosition() <= rampThreshStart3){
+//                    FR.setPower(speed * autoSpeedMult * 0.5);
+//                }
+//                else if (FR.getCurrentPosition() <= rampThreshStart){
+//                    FR.setPower(speed * autoSpeedMult * 0.75);
+//                }
+//
+//                else if (FR.getCurrentPosition() >= rampThreshEnd3){
+//                    FR.setPower(speed * autoSpeedMult * 0.1);
+//                }
+//                else if (FR.getCurrentPosition() >= rampThreshEnd2){
+//                    FR.setPower(speed * autoSpeedMult * 0.25);
+//                }
+//                else if (FR.getCurrentPosition() >= rampThreshEnd1){
+//                    FR.setPower(speed * autoSpeedMult * 0.5);
+//                }
+//                else if (FR.getCurrentPosition() >= rampThreshEnd){
+//                    FR.setPower(speed * autoSpeedMult * 0.75);
+//                }
+//                else {
+//                    FR.setPower(speed * autoSpeedMult);
+//                }
+
+                int pos = (int) Math.abs(FR.getCurrentPosition()+FL.getCurrentPosition()+BR.getCurrentPosition()+BL.getCurrentPosition())/4;
+
+                if (pos <= rampThreshStart1){
+                    setDriveMotorPower(driveSpeed, .1);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart1);
+                    OpModeReference.telemetry.addData("mult", .1);
+                }
+                else if (pos <= rampThreshStart2){
+                    setDriveMotorPower(driveSpeed, .25);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart2);
+                    OpModeReference.telemetry.addData("mult", .25);
+                }
+                else if (pos <= rampThreshStart3){
+                    setDriveMotorPower(driveSpeed, .5);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart3);
+                    OpModeReference.telemetry.addData("mult", .5);
+                }
+                else if (pos <= rampThreshStart){
+                    setDriveMotorPower(driveSpeed, .75);
+                    OpModeReference.telemetry.addData("threshold", rampThreshStart);
+                    OpModeReference.telemetry.addData("mult", .75);
+                }
+
+                else if (pos >= rampThreshEnd3){
+                    setDriveMotorPower(driveSpeed, .1);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd3);
+                    OpModeReference.telemetry.addData("mult", .1);
+                }
+                else if (pos >= rampThreshEnd2){
+                    setDriveMotorPower(driveSpeed, .25);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd2);
+                    OpModeReference.telemetry.addData("mult", .25);
+                }
+                else if (pos >= rampThreshEnd1){
+                    setDriveMotorPower(driveSpeed, .5);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd1);
+                    OpModeReference.telemetry.addData("mult", .5);
+                }
+                else if (pos >= rampThreshEnd){
+                    setDriveMotorPower(driveSpeed, .75);
+                    OpModeReference.telemetry.addData("threshold", rampThreshEnd);
+                    OpModeReference.telemetry.addData("mult", .75);
+                }
+                else {
+                    setDriveMotorPower(driveSpeed, 1);
+                    OpModeReference.telemetry.addData("threshold", "none :)");
+                    OpModeReference.telemetry.addData("mult", 1);
+                }
+                OpModeReference.telemetry.update();
+            }
+
+            // once all motors get to where they need to be, turn them off
+            stopDriving();
+
+            // set motors back to RUN_USING_ENCODERS
+            for (DcMotor m : AllMotors)
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    private void setDriveMotorPower(double methodSpeed, double stepMult) {
+        for (DcMotor m : AllMotors)
+            m.setPower(methodSpeed * stepMult);
+    }
+
     private void strafe (double inches, double speed){
         if (OpModeReference.opModeIsActive()) {
             //int targetTicks = (int) (countsPerInch * inches * 2);
@@ -423,7 +576,7 @@ public class SevenTheRobot {
             BR.setTargetPosition(targetTicks);
 
             for (DcMotor m : AllMotors)
-                m.setPower(speed / Math.sqrt(2));
+                m.setPower(speed * Math.sqrt(autoSpeedMult));
 
             while (OpModeReference.opModeIsActive() && (FL.isBusy() && FR.isBusy() && BL.isBusy()
                     && BR.isBusy())) {
@@ -447,7 +600,7 @@ public class SevenTheRobot {
 
     //Tele-op Methods:
 
-    public void colors () {
+    /*public void colors () {
         if (OpModeReference.gamepad1.y)
             lightToggle = 1;
         else if (OpModeReference.gamepad1.b)
@@ -465,10 +618,10 @@ public class SevenTheRobot {
             blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.FIRE_LARGE);
         else if (lightToggle == 4)
             blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.TWINKLES_PARTY_PALETTE);
-    }
+    }*/
 
     public void launcherMono (double outtakePower) {
-        OT.setPower(-outtakePower);
+        OT.setPower(-0.95*outtakePower);
     }
 
     public void intakeMono  (double intakePower) {
@@ -545,8 +698,8 @@ public class SevenTheRobot {
     // it needs to be called before WaitForStart()
     // keep separate from other initialization code - only use in autonomous where want to detect rings
     public void InitCamera() {
-        blinkinLedDriver.close();
-        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+        /*blinkinLedDriver.close();
+        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);*/
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         // make sure webcam name in hardware config matches deviceName here
@@ -579,7 +732,7 @@ public class SevenTheRobot {
     public void CloseCamera() {
         if (objectDetector != null)
             objectDetector.shutdown();
-        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
+        /*blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);*/
     }
 
     // the result of this method will be one of our predefined strings from above
