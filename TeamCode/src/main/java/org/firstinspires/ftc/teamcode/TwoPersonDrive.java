@@ -59,10 +59,17 @@ public class TwoPersonDrive extends LinearOpMode {
 
             seven.bumper(gamepad2.right_bumper);
 
-            if (gamepad2.dpad_up)
-                shootMult = 1;
-            else if (gamepad2.dpad_down)
-                shootMult = 0.9;
+            if (gamepad2.dpad_up){
+                shootMult = 1; //3rd goal
+                telemetry.addData("Launcher:", "Top Goal");
+                telemetry.update();
+            }
+            else if (gamepad2.dpad_down) {
+                shootMult = 0.9; //power shots
+                telemetry.addData("Launcher:", "Power Shots");
+                telemetry.update();
+            }
+
             if (gamepad2.left_bumper)
                 seven.armDown();
             else
