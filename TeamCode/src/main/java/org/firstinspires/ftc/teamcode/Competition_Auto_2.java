@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="Autonomous", group="Linear Opmode")
-public class Competition_Auto extends LinearOpMode{
+@Autonomous(name="Autonomous 2", group="Linear Opmode")
+public class Competition_Auto_2 extends LinearOpMode{
     @Override
     public void runOpMode() {
         SevenTheRobot seven = new SevenTheRobot(this);
@@ -35,52 +34,44 @@ public class Competition_Auto extends LinearOpMode{
         telemetry.update();
         seven.CloseCamera();
 
-        seven.drive(-20, speed1);
+        seven.drive(-18, speed1);
 //        seven.strafeL(16, speed2); //strafe right to align cam w/ rings
 //        seven.strafeR(3, speed2);
 
         int wait = 400;
 
+        seven.strafeR(18, speed1/2);
+
         // spin up
-        seven.launcherMono(0.95);
-        sleep(wait*2);
-        // fire 1
-        seven.bumper(true);
-        sleep(wait);
-        seven.bumper(false);
-        seven.strafeL(8.5, speed2);
-        // fire 2
-        seven.launcherMono(0.9);
-        sleep(wait);
-        seven.bumper(true);
-        sleep(wait);
-        seven.bumper(false);
-        seven.strafeL(7.5, speed2);
-        // fire 3
-        seven.launcherMono(0.95);
-        sleep(wait);
-        seven.bumper(true);
-        sleep(wait);
-        seven.bumper(false);
+        seven.launcherMono(1);
+        sleep(wait*3);
+
+        // fire all three times
+        for (int n = 0; n <= 3; n++) {
+            seven.bumper(true);
+            sleep(wait);
+            seven.bumper(false);
+            sleep(wait);
+        }
         // power back down
         seven.launcherMono(0);
 
         seven.turn(-90, speed1);
-        int strafeAdd = 4;
-        int forwardAdd = 24;
+        seven.turn(-90, speed1);
+
+        int strafeAdd = 24;
+        int forwardAdd = 0;
         if(stackSize.equals(SevenTheRobot.RINGS_FOUR)) {
-            strafeAdd = 50;
-            forwardAdd = 52;
+            forwardAdd = 48;
         }
 
-        else if(stackSize.equals(SevenTheRobot.RINGS_ONE))
-            strafeAdd = 28;
-        else
-            forwardAdd = 42;
+        else if(stackSize.equals(SevenTheRobot.RINGS_ONE)) {
+            strafeAdd = 0;
+            forwardAdd = 24;
+        }
 
-        seven.strafeR(14, speed2);
+        seven.strafeL(strafeAdd, speed2);
         seven.drive(forwardAdd, speed1);
-        seven.strafeR(strafeAdd, speed2);
         seven.armUp();
         sleep(wait);
         seven.armDown();
@@ -91,7 +82,9 @@ public class Competition_Auto extends LinearOpMode{
         seven.armUp();
         sleep(wait);
         seven.turn(30, speed1);
-        seven.strafeL(strafeAdd, 1);
+        seven.drive(-forwardAdd, 1);
+        seven.strafeR(strafeAdd, 1);
+        seven.drive(12, 1);
         seven.Arm.setTargetPosition(0);
         sleep(1000);
 

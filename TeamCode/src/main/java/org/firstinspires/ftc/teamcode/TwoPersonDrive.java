@@ -42,6 +42,8 @@ public class TwoPersonDrive extends LinearOpMode {
         seven.initialize();
         waitForStart();
 
+        seven.OT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double shootMult = 1;
         while (opModeIsActive()){
             double intakePower;
             if (gamepad2.a)
@@ -52,15 +54,15 @@ public class TwoPersonDrive extends LinearOpMode {
                 intakePower = -1;
             else
                 intakePower = 0;
-            double outtakePower = gamepad2.right_trigger;
+
+            double outtakePower = gamepad2.right_trigger * shootMult;
 
             seven.bumper(gamepad2.right_bumper);
 
             if (gamepad2.dpad_up)
-                seven.OT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                shootMult = 1;
             else if (gamepad2.dpad_down)
-                seven.OT.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+                shootMult = 0.9;
             if (gamepad2.left_bumper)
                 seven.armDown();
             else
