@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="Autonomous 2", group="Linear Opmode")
+@Autonomous(name="Autonomous 2 (the good one)", group="Linear Opmode")
 public class Competition_Auto_2 extends LinearOpMode{
     @Override
     public void runOpMode() {

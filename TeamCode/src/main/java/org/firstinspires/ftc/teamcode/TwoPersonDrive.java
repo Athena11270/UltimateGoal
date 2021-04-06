@@ -79,6 +79,8 @@ public class TwoPersonDrive extends LinearOpMode {
                 seven.closeClaw();
             else
                 seven.openClaw();
+            telemetry.addData("Dollars for Hayden:", "1,000,000");
+            telemetry.update();
 
             seven.mecanumInv();
             seven.launcherMono(outtakePower);
